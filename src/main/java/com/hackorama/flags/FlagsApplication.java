@@ -14,9 +14,8 @@ import org.springframework.data.map.repository.config.EnableMapRepositories;
 @EnableMapRepositories
 public class FlagsApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FlagsApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(FlagsApplication.class, args);
+    }
 
 }
-

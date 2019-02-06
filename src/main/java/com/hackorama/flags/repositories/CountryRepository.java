@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.hackorama.flags.data.Country;
 
 /**
- * The Country data repository 
- * 
+ * The Country data repository
+ *
  * @author Kishan Thomas (kishan.thomas@gmail.com)
  *
  */

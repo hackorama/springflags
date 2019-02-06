@@ -10,10 +10,15 @@ buildscript {
 	}
 }
 
+plugins {
+	id "com.diffplug.gradle.spotless" version "3.17.0"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.diffplug.gradle.spotless'
 
 group = 'com.hackorama'
 version = '0.0.1-SNAPSHOT'
@@ -27,4 +32,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.data:spring-data-keyvalue'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+spotless {
+	java {
+		trimTrailingWhitespace()
+		indentWithSpaces(4)
+		endWithNewline()
+		importOrder 'java', 'javax', 'org', 'com', 'com.hackorama'
+		removeUnusedImports() 
+	}
 }
