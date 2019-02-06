@@ -32,13 +32,34 @@ Authentication added for auditing
 
 
 ```
-$ curl   http://127.0.0.1:8080/flags/USA
+$ curl http://127.0.0.1:8080/flags/USA
 HTTP Status 401 : Full authentication is required to access this resource
 ```
 
 ```
-$ curl --user test:test  http://127.0.0.1:8080/flags/USA
-[{"name":"USA","flag":"\uD83C\uDDFA\uD83C\uDDF8"}]
+$ curl -s --user test:test  http://127.0.0.1:8080/flags/Europe | jq
+[
+  {
+    "name": "Russia",
+    "flag": "🇷🇺"
+  },
+  {
+    "name": "Germany",
+    "flag": "🇩🇪"
+  },
+  {
+    "name": "UK",
+    "flag": "🇬🇧"
+  },
+  {
+    "name": "France",
+    "flag": "🇫🇷"
+  },
+  {
+    "name": "Italy",
+    "flag": "🇮🇹"
+  }
+]
 ```
 
 
@@ -46,6 +67,7 @@ $ curl --user test:test  http://127.0.0.1:8080/flags/USA
 
 
 ### Health 
+
 ```
 $ curl http://127.0.0.1:8080/actuator/health
 {"status":"UP"}
@@ -54,13 +76,96 @@ $ curl http://127.0.0.1:8080/actuator/health
 ### System Metrics
 
 ```
-$ curl http://127.0.0.1:8080/actuator/metrics/jvm.memory.used
-{"name":"jvm.memory.used","description":"The amount of used memory","baseUnit":"bytes","measurements":[{"statistic":"VALUE","value":1.24928168E8}],"availableTags":[{"tag":"area","values":["heap","nonheap"]},{"tag":"id","values":["Compressed Class Space","PS Survivor Space","PS Old Gen","Metaspace","PS Eden Space","Code Cache"]}]}
+$ curl -s  http://127.0.0.1:8080/actuator/metrics/jvm.memory.used | jq
+{
+  "name": "jvm.memory.used",
+  "description": "The amount of used memory",
+  "baseUnit": "bytes",
+  "measurements": [
+    {
+      "statistic": "VALUE",
+      "value": 91612696
+    }
+  ],
+  "availableTags": [
+    {
+      "tag": "area",
+      "values": [
+        "heap",
+        "nonheap"
+      ]
+    },
+    {
+      "tag": "id",
+      "values": [
+        "Survivor Space",
+        "Eden Space",
+        "Compressed Class Space",
+        "Metaspace",
+        "Code Cache",
+        "Tenured Gen"
+      ]
+    }
+  ]
+}
+
 ```
 
 ```
-$ curl http://127.0.0.1:8080/actuator/metrics/http.server.requests
-{"name":"http.server.requests","description":null,"baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":6.0},{"statistic":"TOTAL_TIME","value":0.127122619},{"statistic":"MAX","value":0.065799236}],"availableTags":[{"tag":"exception","values":["None"]},{"tag":"method","values":["GET"]},{"tag":"uri","values":["/actuator/metrics/{requiredMetricName}","/actuator/info","/actuator/metrics/","/actuator/metrics"]},{"tag":"outcome","values":["SUCCESS"]},{"tag":"status","values":["200"]}]}
+$ curl -s  http://127.0.0.1:8080/actuator/metrics/http.server.requests | jq
+{
+  "name": "http.server.requests",
+  "description": null,
+  "baseUnit": "seconds",
+  "measurements": [
+    {
+      "statistic": "COUNT",
+      "value": 2
+    },
+    {
+      "statistic": "TOTAL_TIME",
+      "value": 0.24187294799999998
+    },
+    {
+      "statistic": "MAX",
+      "value": 0.138107665
+    }
+  ],
+  "availableTags": [
+    {
+      "tag": "exception",
+      "values": [
+        "None"
+      ]
+    },
+    {
+      "tag": "method",
+      "values": [
+        "GET"
+      ]
+    },
+    {
+      "tag": "uri",
+      "values": [
+        "/actuator/metrics/{requiredMetricName}",
+        "/actuator/health"
+      ]
+    },
+    {
+      "tag": "outcome",
+      "values": [
+        "SUCCESS"
+      ]
+    },
+    {
+      "tag": "status",
+      "values": [
+        "200"
+      ]
+    }
+  ]
+}
+
 ```
 
 ### Application Metrics
@@ -68,8 +173,59 @@ $ curl http://127.0.0.1:8080/actuator/metrics/http.server.requests
 Flags API call metrics for `/flags/{id}`
  
 ```
-$ curl http://127.0.0.1:8080/actuator/metrics/flags.byid
-{"name":"flags.byid","description":null,"baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":4.0},{"statistic":"TOTAL_TIME","value":0.026370291},{"statistic":"MAX","value":0.003816216}],"availableTags":[{"tag":"exception","values":["None"]},{"tag":"method","values":["GET"]},{"tag":"uri","values":["/flags/{id}"]},{"tag":"outcome","values":["SUCCESS"]},{"tag":"status","values":["200"]}]}
+$ curl -s  http://127.0.0.1:8080/actuator/metrics/flags.byid | jq
+{
+  "name": "flags.byid",
+  "description": null,
+  "baseUnit": "seconds",
+  "measurements": [
+    {
+      "statistic": "COUNT",
+      "value": 8
+    },
+    {
+      "statistic": "TOTAL_TIME",
+      "value": 3.61813278
+    },
+    {
+      "statistic": "MAX",
+      "value": 0.296093769
+    }
+  ],
+  "availableTags": [
+    {
+      "tag": "exception",
+      "values": [
+        "None"
+      ]
+    },
+    {
+      "tag": "method",
+      "values": [
+        "GET"
+      ]
+    },
+    {
+      "tag": "uri",
+      "values": [
+        "/flags/{id}"
+      ]
+    },
+    {
+      "tag": "outcome",
+      "values": [
+        "SUCCESS"
+      ]
+    },
+    {
+      "tag": "status",
+      "values": [
+        "200"
+      ]
+    }
+  ]
+}
+
 ```
 
 ### Auditing 
@@ -77,7 +233,61 @@ $ curl http://127.0.0.1:8080/actuator/metrics/flags.byid
 Authentication events are captured as audit events
 
 ```
-$ curl http://127.0.0.1:8080/actuator/auditevents
-{"events":[{"timestamp":"2019-02-06T22:12:20.239Z","principal":"anonymousUser","type":"AUTHORIZATION_FAILURE","data":{"details":{"remoteAddress":"127.0.0.1","sessionId":null},"type":"org.springframework.security.access.AccessDeniedException","message":"Access is denied"}},{"timestamp":"2019-02-06T22:12:30.838Z","principal":"test","type":"AUTHENTICATION_FAILURE","data":{"details":{"remoteAddress":"127.0.0.1","sessionId":null},"type":"org.springframework.security.authentication.BadCredentialsException","message":"Bad credentials"}},{"timestamp":"2019-02-06T22:12:50.914Z","principal":"test","type":"AUTHENTICATION_SUCCESS","data":{"details":{"remoteAddress":"127.0.0.1","sessionId":null}}}]}
+~$ curl -s  http://127.0.0.1:8080/actuator/auditevents | jq
+{
+  "events": [
+    {
+      "timestamp": "2019-02-06T22:21:31.987Z",
+      "principal": "test",
+      "type": "AUTHENTICATION_SUCCESS",
+      "data": {
+        "details": {
+          "remoteAddress": "127.0.0.1",
+          "sessionId": null
+        }
+      }
+    },
+    {
+      "timestamp": "2019-02-06T22:25:52.945Z",
+      "principal": "test",
+      "type": "AUTHENTICATION_FAILURE",
+      "data": {
+        "details": {
+          "remoteAddress": "127.0.0.1",
+          "sessionId": null
+        },
+        "type": "org.springframework.security.authentication.BadCredentialsException",
+        "message": "Bad credentials"
+      }
+    },
+    {
+      "timestamp": "2019-02-06T22:25:58.254Z",
+      "principal": "anonymousUser",
+      "type": "AUTHORIZATION_FAILURE",
+      "data": {
+        "details": {
+          "remoteAddress": "127.0.0.1",
+          "sessionId": null
+        },
+        "type": "org.springframework.security.access.AccessDeniedException",
+        "message": "Access is denied"
+      }
+    },
+    {
+      "timestamp": "2019-02-06T22:26:01.110Z",
+      "principal": "test",
+      "type": "AUTHENTICATION_FAILURE",
+      "data": {
+        "details": {
+          "remoteAddress": "127.0.0.1",
+          "sessionId": null
+        },
+        "type": "org.springframework.security.authentication.BadCredentialsException",
+        "message": "Bad credentials"
+      }
+    }
+  ]
+}
+
 ```
 
