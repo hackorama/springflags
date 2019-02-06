@@ -36,3 +36,10 @@ Using Actuator
 $ curl http://127.0.0.1:8080/actuator/health
 {"status":"UP"}
 ```
+
+System Metrics
+
+```
+$ curl http://127.0.0.1:8080/actuator/metrics/http.server.requests
+{"name":"http.server.requests","description":null,"baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":6.0},{"statistic":"TOTAL_TIME","value":0.127122619},{"statistic":"MAX","value":0.065799236}],"availableTags":[{"tag":"exception","values":["None"]},{"tag":"method","values":["GET"]},{"tag":"uri","values":["/actuator/metrics/{requiredMetricName}","/actuator/info","/actuator/metrics/","/actuator/metrics"]},{"tag":"outcome","values":["SUCCESS"]},{"tag":"status","values":["200"]}]}
+```
