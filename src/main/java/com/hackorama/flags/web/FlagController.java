@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hackorama.flags.data.Country;
 import com.hackorama.flags.repositories.ContinentRepository;
 import com.hackorama.flags.repositories.CountryRepository;
+import io.micrometer.core.annotation.Timed;
 
 /**
  * The controller for flag API
@@ -23,6 +24,7 @@ import com.hackorama.flags.repositories.CountryRepository;
  *
  */
 @RestController
+@Timed("flags")
 public class FlagController {
 
     @Autowired
@@ -30,12 +32,14 @@ public class FlagController {
     @Autowired
     private CountryRepository countryRepository;
 
+    @Timed(value = "flags.all")
     @RequestMapping(value = "/flags", method = RequestMethod.GET)
     @ResponseBody
     private ResponseEntity<List<Country>> getFlags() {
         return getFlags(null);
     }
 
+    @Timed(value = "flags.byid")
     @RequestMapping(value = "/flags/{id}", method = RequestMethod.GET)
     @ResponseBody
     private ResponseEntity<List<Country>> getFlags(@PathVariable("id") String id) {
