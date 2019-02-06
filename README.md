@@ -15,6 +15,7 @@ Implementation focused to leverage the best practices and conventions of Spring 
 * Use `Spring Boot Test` for unit/integration tests
 * Configure using `application.properties`
 
+## Run
 
 ```
 $ ./gradlew bootRun
@@ -25,21 +26,41 @@ $ ./gradlew bootRun
 ..
 ```
 
+## Test
+
 ```
 $ curl http://127.0.0.1:8080/flags/America
 [{"name":"USA","flag":"\uD83C\uDDFA\uD83C\uDDF8"},{"name":"Brazil","flag":"\uD83C\uDDE7\uD83C\uDDF7"},{"name":"Mexico","flag":"\uD83C\uDDF2\uD83C\uDDFD"},{"name":"Colombia","flag":"\uD83C\uDDE8\uD83C\uDDF4"},{"name":"Argentina","flag":"\uD83C\uDDE6\uD83C\uDDF7"}]
 ```
 
-Using Actuator
+## Metrics Using Actuator
 
+
+### Health 
 ```
 $ curl http://127.0.0.1:8080/actuator/health
 {"status":"UP"}
 ```
 
-System Metrics
+### System Metrics
+
+```
+$ curl http://127.0.0.1:8080/actuator/metrics/jvm.memory.used
+{"name":"jvm.memory.used","description":"The amount of used memory","baseUnit":"bytes","measurements":[{"statistic":"VALUE","value":1.24928168E8}],"availableTags":[{"tag":"area","values":["heap","nonheap"]},{"tag":"id","values":["Compressed Class Space","PS Survivor Space","PS Old Gen","Metaspace","PS Eden Space","Code Cache"]}]}
+```
 
 ```
 $ curl http://127.0.0.1:8080/actuator/metrics/http.server.requests
 {"name":"http.server.requests","description":null,"baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":6.0},{"statistic":"TOTAL_TIME","value":0.127122619},{"statistic":"MAX","value":0.065799236}],"availableTags":[{"tag":"exception","values":["None"]},{"tag":"method","values":["GET"]},{"tag":"uri","values":["/actuator/metrics/{requiredMetricName}","/actuator/info","/actuator/metrics/","/actuator/metrics"]},{"tag":"outcome","values":["SUCCESS"]},{"tag":"status","values":["200"]}]}
 ```
+
+### Application Metrics
+
+Flags API call metrics for `/flags/{id}`
+ 
+```
+$ curl http://127.0.0.1:8080/actuator/metrics/flags.byid
+{"name":"flags.byid","description":null,"baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":4.0},{"statistic":"TOTAL_TIME","value":0.026370291},{"statistic":"MAX","value":0.003816216}],"availableTags":[{"tag":"exception","values":["None"]},{"tag":"method","values":["GET"]},{"tag":"uri","values":["/flags/{id}"]},{"tag":"outcome","values":["SUCCESS"]},{"tag":"status","values":["200"]}]}
+```
+
+
