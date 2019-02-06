@@ -17,7 +17,7 @@ public class LoaderTest {
 
 	@Test
 	public void onLoadingJson_expectsCorrectData() throws IOException {
-		List<Continent> continents = Loader.load("/continents.txt");
+		List<Continent> continents = new Loader().load("/continents.txt");
 		testFlag(continents, "Africa", "Nigeria", "🇳🇬");
 		testFlag(continents, "America", "USA", "🇺🇸");
 		testFlag(continents, "Oceania", "Solomon Islands", "🇸🇧");
