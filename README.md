@@ -28,10 +28,19 @@ $ ./gradlew bootRun
 
 ## Test
 
+Authentication added for auditing
+
+
 ```
-$ curl http://127.0.0.1:8080/flags/America
-[{"name":"USA","flag":"\uD83C\uDDFA\uD83C\uDDF8"},{"name":"Brazil","flag":"\uD83C\uDDE7\uD83C\uDDF7"},{"name":"Mexico","flag":"\uD83C\uDDF2\uD83C\uDDFD"},{"name":"Colombia","flag":"\uD83C\uDDE8\uD83C\uDDF4"},{"name":"Argentina","flag":"\uD83C\uDDE6\uD83C\uDDF7"}]
+$ curl   http://127.0.0.1:8080/flags/USA
+HTTP Status 401 : Full authentication is required to access this resource
 ```
+
+```
+$ curl --user test:test  http://127.0.0.1:8080/flags/USA
+[{"name":"USA","flag":"\uD83C\uDDFA\uD83C\uDDF8"}]
+```
+
 
 ## Metrics Using Actuator
 
@@ -63,4 +72,12 @@ $ curl http://127.0.0.1:8080/actuator/metrics/flags.byid
 {"name":"flags.byid","description":null,"baseUnit":"seconds","measurements":[{"statistic":"COUNT","value":4.0},{"statistic":"TOTAL_TIME","value":0.026370291},{"statistic":"MAX","value":0.003816216}],"availableTags":[{"tag":"exception","values":["None"]},{"tag":"method","values":["GET"]},{"tag":"uri","values":["/flags/{id}"]},{"tag":"outcome","values":["SUCCESS"]},{"tag":"status","values":["200"]}]}
 ```
 
+### Auditing 
+
+Authentication events are captured as audit events
+
+```
+$ curl http://127.0.0.1:8080/actuator/auditevents
+{"events":[{"timestamp":"2019-02-06T22:12:20.239Z","principal":"anonymousUser","type":"AUTHORIZATION_FAILURE","data":{"details":{"remoteAddress":"127.0.0.1","sessionId":null},"type":"org.springframework.security.access.AccessDeniedException","message":"Access is denied"}},{"timestamp":"2019-02-06T22:12:30.838Z","principal":"test","type":"AUTHENTICATION_FAILURE","data":{"details":{"remoteAddress":"127.0.0.1","sessionId":null},"type":"org.springframework.security.authentication.BadCredentialsException","message":"Bad credentials"}},{"timestamp":"2019-02-06T22:12:50.914Z","principal":"test","type":"AUTHENTICATION_SUCCESS","data":{"details":{"remoteAddress":"127.0.0.1","sessionId":null}}}]}
+```
 
